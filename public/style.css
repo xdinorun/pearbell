@@ -15,7 +15,6 @@
 html,
 body {
     margin: 0;
-
     width: 100%;
     min-height: 100%;
 
@@ -71,14 +70,10 @@ button {
 
 #school-screen {
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    padding:
-        40px
-        22px
-        100px;
+    padding: 40px 22px 100px;
 }
 
 .school-picker {
@@ -89,7 +84,7 @@ button {
 
 
 /* =========================================
-   PEAR INTRO
+   INTRO
 ========================================= */
 
 .intro-logo {
@@ -98,7 +93,6 @@ button {
     height: 220px;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
@@ -106,6 +100,14 @@ button {
 
     margin-bottom: 38px;
 }
+
+
+/*
+    Initial states.
+
+    JavaScript adds the .play-intro class
+    whenever the school picker is shown.
+*/
 
 .rolling-pear {
     position: absolute;
@@ -122,14 +124,20 @@ button {
     font-size: 4rem;
     line-height: 1;
 
+    opacity: 0;
+
+    transform:
+        translateX(-70vw)
+        translateY(60px)
+        rotate(-720deg);
+
     transform-origin: 50% 60%;
 
-    animation:
-        pear-roll-jump
-        1.45s
-        cubic-bezier(.22, .82, .3, 1)
-        both;
+    will-change:
+        transform,
+        opacity;
 }
+
 
 .intro-title {
     margin: 0;
@@ -150,13 +158,47 @@ button {
     opacity: 0;
 
     transform:
-        translateY(8px);
+        translateY(10px);
+}
 
+
+.school-select-area {
+    opacity: 0;
+
+    transform:
+        translateY(8px);
+}
+
+
+/* =========================================
+   ACTIVE INTRO ANIMATIONS
+========================================= */
+
+#school-screen.play-intro .rolling-pear {
+    animation:
+        pear-roll-jump
+        1.5s
+        cubic-bezier(.22, .82, .3, 1)
+        both;
+}
+
+
+#school-screen.play-intro .intro-title {
     animation:
         title-reveal
         500ms
         ease
         1.25s
+        forwards;
+}
+
+
+#school-screen.play-intro .school-select-area {
+    animation:
+        content-reveal
+        450ms
+        ease
+        1.48s
         forwards;
 }
 
@@ -183,6 +225,8 @@ button {
             rotate(0deg)
             scaleX(1)
             scaleY(1);
+
+        opacity: 1;
     }
 
     61% {
@@ -197,7 +241,7 @@ button {
     76% {
         transform:
             translateX(0)
-            translateY(-18px)
+            translateY(-22px)
             rotate(8deg)
             scaleX(0.96)
             scaleY(1.04);
@@ -219,6 +263,8 @@ button {
             rotate(0deg)
             scaleX(1)
             scaleY(1);
+
+        opacity: 1;
     }
 }
 
@@ -241,25 +287,14 @@ button {
 }
 
 
-/* =========================================
-   SCHOOL DROPDOWN
-========================================= */
-
-.school-select-area {
-    opacity: 0;
-
-    transform:
-        translateY(8px);
-
-    animation:
-        content-reveal
-        450ms
-        ease
-        1.45s
-        forwards;
-}
-
 @keyframes content-reveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
 
     to {
         opacity: 1;
@@ -268,6 +303,11 @@ button {
             translateY(0);
     }
 }
+
+
+/* =========================================
+   SCHOOL DROPDOWN
+========================================= */
 
 .school-label {
     display: block;
@@ -278,9 +318,11 @@ button {
     font-weight: 650;
 }
 
+
 .select-wrapper {
     position: relative;
 }
+
 
 .select-wrapper::after {
     content: "";
@@ -293,11 +335,8 @@ button {
     width: 9px;
     height: 9px;
 
-    border-right:
-        2px solid currentColor;
-
-    border-bottom:
-        2px solid currentColor;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
 
     transform:
         translateY(-70%)
@@ -305,6 +344,7 @@ button {
 
     pointer-events: none;
 }
+
 
 #school-select {
     width: 100%;
@@ -332,7 +372,6 @@ button {
     color: var(--text);
 
     cursor: pointer;
-
     outline: none;
 
     font-size: 1rem;
@@ -343,6 +382,7 @@ button {
         box-shadow 150ms ease;
 }
 
+
 #school-select:hover {
     border-color:
         color-mix(
@@ -351,6 +391,7 @@ button {
             transparent
         );
 }
+
 
 #school-select:focus {
     border-color:
@@ -371,7 +412,7 @@ button {
 
 
 /* =========================================
-   CONTINUE BUTTON
+   CONTINUE
 ========================================= */
 
 #school-confirm {
@@ -379,12 +420,9 @@ button {
 
     margin-top: 12px;
 
-    padding:
-        14px
-        18px;
+    padding: 14px 18px;
 
     border: 0;
-
     border-radius: 13px;
 
     background: var(--text);
@@ -400,15 +438,18 @@ button {
         transform 140ms ease;
 }
 
+
 #school-confirm:hover:not(:disabled) {
     transform:
         translateY(-1px);
 }
 
+
 #school-confirm:active:not(:disabled) {
     transform:
         scale(0.99);
 }
+
 
 #school-confirm:disabled {
     opacity: 0.22;
@@ -418,14 +459,11 @@ button {
 
 
 /* =========================================
-   HELP TEXT
+   HELP
 ========================================= */
 
 .help {
-    margin:
-        19px
-        0
-        0;
+    margin: 19px 0 0;
 
     font-size: 0.82rem;
 
@@ -437,6 +475,7 @@ button {
         );
 }
 
+
 .help a {
     color: inherit;
 
@@ -444,6 +483,7 @@ button {
 
     text-decoration: none;
 }
+
 
 .help a:hover {
     text-decoration: underline;
@@ -460,6 +500,7 @@ button {
     overflow: hidden;
 }
 
+
 .countdown-header {
     position: absolute;
 
@@ -469,15 +510,14 @@ button {
     width: 100%;
 
     display: flex;
-
     justify-content: center;
 
     pointer-events: none;
 }
 
+
 .mini-brand {
     display: flex;
-
     align-items: center;
 
     gap: 7px;
@@ -493,6 +533,7 @@ button {
         );
 }
 
+
 .mini-brand span:first-child {
     font-size: 1rem;
 }
@@ -504,7 +545,6 @@ button {
     min-height: 100vh;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
@@ -512,10 +552,7 @@ button {
 
     text-align: center;
 
-    padding:
-        105px
-        24px
-        80px;
+    padding: 105px 24px 80px;
 
     animation:
         screen-enter
@@ -523,6 +560,7 @@ button {
         ease
         both;
 }
+
 
 @keyframes screen-enter {
 
@@ -564,6 +602,7 @@ button {
         tabular-nums;
 }
 
+
 #countdown-label {
     margin-top: 24px;
 
@@ -593,6 +632,7 @@ button {
     margin-top: 48px;
 }
 
+
 #current-period {
     font-size:
         clamp(
@@ -603,6 +643,7 @@ button {
 
     font-weight: 720;
 }
+
 
 #period-times {
     margin-top: 7px;
@@ -623,11 +664,7 @@ button {
 ========================================= */
 
 .next-block {
-    width:
-        min(
-            430px,
-            90%
-        );
+    width: min(430px, 90%);
 
     margin-top: 30px;
 
@@ -640,6 +677,7 @@ button {
             var(--background)
         );
 }
+
 
 .next-divider {
     width: 100%;
@@ -655,11 +693,13 @@ button {
         );
 }
 
+
 .next-prefix {
     font-weight: 700;
 
     color: var(--text);
 }
+
 
 #next-period-times {
     margin-top: 5px;
@@ -669,12 +709,11 @@ button {
 
 
 /* =========================================
-   CHANGE SCHOOL BUTTON
+   CHANGE SCHOOL
 ========================================= */
 
 #change-school {
     display: flex;
-
     align-items: center;
 
     gap: 8px;
@@ -691,9 +730,7 @@ button {
 
     border-radius: 12px;
 
-    padding:
-        10px
-        15px;
+    padding: 10px 15px;
 
     background: transparent;
     color: var(--text);
@@ -708,6 +745,7 @@ button {
         background-color 140ms ease;
 }
 
+
 #change-school:hover {
     background:
         color-mix(
@@ -719,6 +757,7 @@ button {
     transform:
         translateY(-1px);
 }
+
 
 #change-school:active {
     transform:
@@ -761,7 +800,6 @@ button {
     height: 43px;
 
     display: grid;
-
     place-items: center;
 
     padding: 0;
@@ -793,18 +831,12 @@ button {
         box-shadow 150ms ease;
 }
 
+
 #theme-toggle:hover {
     transform:
         translateY(-2px);
-
-    box-shadow:
-        0 8px 27px
-        color-mix(
-            in srgb,
-            var(--text) 14%,
-            transparent
-        );
 }
+
 
 .theme-wheel {
     width: 22px;
@@ -874,6 +906,7 @@ button {
         both;
 }
 
+
 @keyframes theme-panel-in {
 
     from {
@@ -893,18 +926,20 @@ button {
     }
 }
 
+
 .theme-panel-header {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
 
     margin-bottom: 17px;
 }
 
+
 .theme-panel-header strong {
     font-size: 0.94rem;
 }
+
 
 #theme-close {
     border: 0;
@@ -921,6 +956,7 @@ button {
     opacity: 0.55;
 }
 
+
 #theme-close:hover {
     opacity: 1;
 }
@@ -932,13 +968,10 @@ button {
 
 .color-setting {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
 
-    margin:
-        12px
-        0;
+    margin: 12px 0;
 
     font-size: 0.84rem;
 
@@ -949,6 +982,7 @@ button {
             var(--background)
         );
 }
+
 
 input[type="color"] {
     width: 34px;
@@ -973,19 +1007,20 @@ input[type="color"] {
     cursor: pointer;
 }
 
+
 input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
 }
 
+
 input[type="color"]::-webkit-color-swatch {
     border: 0;
-
     border-radius: 50%;
 }
 
+
 input[type="color"]::-moz-color-swatch {
     border: 0;
-
     border-radius: 50%;
 }
 
@@ -1009,13 +1044,14 @@ input[type="color"]::-moz-color-swatch {
         );
 }
 
+
 .theme-presets {
     display: flex;
-
     align-items: center;
 
     gap: 10px;
 }
+
 
 .theme-preset {
     width: 29px;
@@ -1023,12 +1059,7 @@ input[type="color"]::-moz-color-swatch {
 
     border:
         1px solid
-        rgba(
-            128,
-            128,
-            128,
-            0.25
-        );
+        rgba(128, 128, 128, 0.25);
 
     border-radius: 50%;
 
@@ -1038,43 +1069,49 @@ input[type="color"]::-moz-color-swatch {
         transform 130ms ease;
 }
 
+
 .theme-preset:hover {
     transform:
         scale(1.12);
 }
 
+
 .preset-default {
     background: #ffffff;
 }
+
 
 .preset-dark {
     background: #111111;
 }
 
+
 .preset-blue {
     background: #edf4ff;
 }
+
 
 .preset-purple {
     background: #f5efff;
 }
 
+
 .preset-green {
     background: #f1f8ed;
 }
 
+
 .preset-pink {
     background: #fff1f5;
 }
+
 
 #reset-theme {
     width: 100%;
 
     margin-top: 18px;
 
-    padding:
-        9px
-        12px;
+    padding: 9px 12px;
 
     border:
         1px solid
@@ -1103,10 +1140,7 @@ input[type="color"]::-moz-color-swatch {
 @media (max-width: 600px) {
 
     #school-screen {
-        padding:
-            25px
-            20px
-            90px;
+        padding: 25px 20px 90px;
     }
 
     .intro-logo {
@@ -1128,10 +1162,7 @@ input[type="color"]::-moz-color-swatch {
     }
 
     .countdown-container {
-        padding:
-            82px
-            20px
-            75px;
+        padding: 82px 20px 75px;
     }
 
     #countdown {
@@ -1174,28 +1205,36 @@ input[type="color"]::-moz-color-swatch {
    REDUCED MOTION
 ========================================= */
 
-@media (
-    prefers-reduced-motion: reduce
-) {
+@media (prefers-reduced-motion: reduce) {
 
-    *,
-    *::before,
-    *::after {
-        animation-duration:
-            0.001ms !important;
-
-        animation-delay:
-            0ms !important;
+    #school-screen.play-intro .rolling-pear {
+        animation:
+            simple-pear-reveal
+            300ms
+            ease
+            both;
     }
 
-    .intro-title,
-    .school-select-area {
+    #school-screen.play-intro .intro-title,
+    #school-screen.play-intro .school-select-area {
+        animation-delay: 180ms;
+        animation-duration: 300ms;
+    }
+}
+
+
+@keyframes simple-pear-reveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(65px);
+    }
+
+    to {
         opacity: 1;
 
-        transform: none;
-    }
-
-    .rolling-pear {
         transform:
             translateY(55px);
     }
