@@ -1,3 +1,7 @@
+/* =========================================
+   ELEMENTS
+========================================= */
+
 const schoolScreen =
     document.getElementById(
         "school-screen"
@@ -135,6 +139,38 @@ let selectedSchool =
 
 
 /* =========================================
+   INTRO ANIMATION
+========================================= */
+
+function playIntroAnimation() {
+
+    /*
+        Remove the animation class first.
+        This resets the animation even if
+        the user already saw it earlier.
+    */
+
+    schoolScreen.classList.remove(
+        "play-intro"
+    );
+
+
+    /*
+        Force the browser to acknowledge
+        the reset before adding it again.
+        This makes Chrome reliably replay it.
+    */
+
+    void schoolScreen.offsetWidth;
+
+
+    schoolScreen.classList.add(
+        "play-intro"
+    );
+}
+
+
+/* =========================================
    DATE HELPERS
 ========================================= */
 
@@ -210,17 +246,13 @@ function formatTime(
             timeString
         );
 
-    return date
-        .toLocaleTimeString(
-            [],
-            {
-                hour:
-                    "numeric",
-
-                minute:
-                    "2-digit"
-            }
-        );
+    return date.toLocaleTimeString(
+        [],
+        {
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
 }
 
 
@@ -236,33 +268,23 @@ function formatDateAndTime(
         );
 
     const dateText =
-        dateWithTime
-            .toLocaleDateString(
-                [],
-                {
-                    weekday:
-                        "long",
-
-                    month:
-                        "short",
-
-                    day:
-                        "numeric"
-                }
-            );
+        dateWithTime.toLocaleDateString(
+            [],
+            {
+                weekday: "long",
+                month: "short",
+                day: "numeric"
+            }
+        );
 
     const timeText =
-        dateWithTime
-            .toLocaleTimeString(
-                [],
-                {
-                    hour:
-                        "numeric",
-
-                    minute:
-                        "2-digit"
-                }
-            );
+        dateWithTime.toLocaleTimeString(
+            [],
+            {
+                hour: "numeric",
+                minute: "2-digit"
+            }
+        );
 
     return (
         `${dateText} • ${timeText}`
@@ -442,7 +464,6 @@ function getScheduleForDate(
         day === 1 &&
         school.schedules.monday
     ) {
-
         return (
             school.schedules.monday
         );
@@ -457,7 +478,6 @@ function getScheduleForDate(
         school.schedules
             .tuesdayThursday
     ) {
-
         return (
             school.schedules
                 .tuesdayThursday
@@ -473,7 +493,6 @@ function getScheduleForDate(
         school.schedules
             .wednesdayFriday
     ) {
-
         return (
             school.schedules
                 .wednesdayFriday
@@ -484,7 +503,6 @@ function getScheduleForDate(
     if (
         school.schedules.default
     ) {
-
         return (
             school.schedules.default
         );
@@ -588,7 +606,7 @@ function findNextBlock(
 
 
 /* =========================================
-   FIND NEXT SCHOOL DAY
+   NEXT SCHOOL DAY
 ========================================= */
 
 function findNextSchoolStart(
@@ -606,13 +624,10 @@ function findNextSchoolStart(
     ) {
 
         const date =
-            new Date(
-                now
-            );
+            new Date(now);
 
         date.setDate(
-            now.getDate() +
-            offset
+            now.getDate() + offset
         );
 
         date.setHours(
@@ -631,7 +646,6 @@ function findNextSchoolStart(
             getDateString(date) >
                 school.schoolYear.end
         ) {
-
             return null;
         }
 
@@ -649,8 +663,7 @@ function findNextSchoolStart(
         ) {
 
             return {
-                unavailable:
-                    true,
+                unavailable: true,
 
                 date,
 
@@ -686,14 +699,9 @@ function findNextSchoolStart(
 
 
         return {
-
-            unavailable:
-                false,
-
+            unavailable: false,
             date,
-
             start,
-
             firstBlock
         };
     }
@@ -715,42 +723,35 @@ function formatCountdown(
         Math.max(
             0,
             Math.ceil(
-                milliseconds /
-                1000
+                milliseconds / 1000
             )
         );
 
 
     const days =
         Math.floor(
-            totalSeconds /
-            86400
+            totalSeconds / 86400
         );
 
 
     const hours =
         Math.floor(
             (
-                totalSeconds %
-                86400
-            ) /
-            3600
+                totalSeconds % 86400
+            ) / 3600
         );
 
 
     const minutes =
         Math.floor(
             (
-                totalSeconds %
-                3600
-            ) /
-            60
+                totalSeconds % 3600
+            ) / 60
         );
 
 
     const seconds =
-        totalSeconds %
-        60;
+        totalSeconds % 60;
 
 
     if (
@@ -759,24 +760,9 @@ function formatCountdown(
 
         return (
             `${days}d ` +
-
-            `${String(hours)
-                .padStart(
-                    2,
-                    "0"
-                )}:` +
-
-            `${String(minutes)
-                .padStart(
-                    2,
-                    "0"
-                )}:` +
-
-            `${String(seconds)
-                .padStart(
-                    2,
-                    "0"
-                )}`
+            `${String(hours).padStart(2, "0")}:` +
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`
         );
     }
 
@@ -787,30 +773,15 @@ function formatCountdown(
 
         return (
             `${hours}:` +
-
-            `${String(minutes)
-                .padStart(
-                    2,
-                    "0"
-                )}:` +
-
-            `${String(seconds)
-                .padStart(
-                    2,
-                    "0"
-                )}`
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`
         );
     }
 
 
     return (
         `${minutes}:` +
-
-        `${String(seconds)
-            .padStart(
-                2,
-                "0"
-            )}`
+        `${String(seconds).padStart(2, "0")}`
     );
 }
 
@@ -854,11 +825,7 @@ function showNextBlockInfo(
 
 
     nextPeriodTimesEl.textContent =
-        `${formatTime(
-            next.start
-        )} → ${formatTime(
-            next.end
-        )}`;
+        `${formatTime(next.start)} → ${formatTime(next.end)}`;
 }
 
 
@@ -944,9 +911,7 @@ function showNextSchoolCountdown(
     periodTimesEl.textContent =
         `Next: ${formatDateAndTime(
             nextSchool.date,
-            nextSchool
-                .firstBlock
-                .start
+            nextSchool.firstBlock.start
         )}`;
 }
 
@@ -997,9 +962,7 @@ function updateCountdown() {
         );
 
 
-    /* -------------------------------------
-       OUTSIDE SCHOOL YEAR
-    ------------------------------------- */
+    /* OUTSIDE SCHOOL YEAR */
 
     if (
         isOutsideSchoolYear(
@@ -1030,9 +993,7 @@ function updateCountdown() {
     }
 
 
-    /* -------------------------------------
-       SPECIAL SCHEDULE NOT VERIFIED
-    ------------------------------------- */
+    /* SPECIAL SCHEDULE NOT VERIFIED */
 
     if (
         exception?.type ===
@@ -1062,9 +1023,7 @@ function updateCountdown() {
     }
 
 
-    /* -------------------------------------
-       NO SCHOOL
-    ------------------------------------- */
+    /* NO SCHOOL */
 
     if (
         exception?.type ===
@@ -1074,16 +1033,14 @@ function updateCountdown() {
         showNextSchoolCountdown(
             school,
             exception.label ||
-            "No School"
+                "No School"
         );
 
         return;
     }
 
 
-    /* -------------------------------------
-       WEEKEND / NO SCHEDULE
-    ------------------------------------- */
+    /* WEEKEND */
 
     if (
         schedule.length === 0
@@ -1117,9 +1074,7 @@ function updateCountdown() {
     }
 
 
-    /* -------------------------------------
-       CURRENT BLOCK
-    ------------------------------------- */
+    /* CURRENT BLOCK */
 
     const current =
         findCurrentBlock(
@@ -1140,8 +1095,7 @@ function updateCountdown() {
 
 
         const remaining =
-            end -
-            now;
+            end - now;
 
 
         countdownEl.textContent =
@@ -1159,11 +1113,7 @@ function updateCountdown() {
 
 
         periodTimesEl.textContent =
-            `${formatTime(
-                block.start
-            )} → ${formatTime(
-                block.end
-            )}`;
+            `${formatTime(block.start)} → ${formatTime(block.end)}`;
 
 
         showNextBlockInfo(
@@ -1176,9 +1126,7 @@ function updateCountdown() {
     }
 
 
-    /* -------------------------------------
-       BEFORE SCHOOL OR GAP
-    ------------------------------------- */
+    /* BEFORE SCHOOL */
 
     const next =
         findNextBlock(
@@ -1199,8 +1147,7 @@ function updateCountdown() {
 
 
         const remaining =
-            start -
-            now;
+            start - now;
 
 
         countdownEl.textContent =
@@ -1218,9 +1165,7 @@ function updateCountdown() {
 
 
         periodTimesEl.textContent =
-            `First bell: ${formatTime(
-                block.start
-            )}`;
+            `First bell: ${formatTime(block.start)}`;
 
 
         nextBlockContainer
@@ -1235,20 +1180,14 @@ function updateCountdown() {
 
 
         nextPeriodTimesEl.textContent =
-            `${formatTime(
-                block.start
-            )} → ${formatTime(
-                block.end
-            )}`;
+            `${formatTime(block.start)} → ${formatTime(block.end)}`;
 
 
         return;
     }
 
 
-    /* -------------------------------------
-       AFTER SCHOOL
-    ------------------------------------- */
+    /* AFTER SCHOOL */
 
     showNextSchoolCountdown(
         school,
@@ -1258,21 +1197,21 @@ function updateCountdown() {
 
 
 /* =========================================
-   SCREEN NAVIGATION
+   SCHOOL PICKER
 ========================================= */
 
 function showSchoolPicker() {
 
-    schoolScreen
+    countdownScreen
         .classList
-        .remove(
+        .add(
             "hidden"
         );
 
 
-    countdownScreen
+    schoolScreen
         .classList
-        .add(
+        .remove(
             "hidden"
         );
 
@@ -1283,6 +1222,18 @@ function showSchoolPicker() {
 
     schoolConfirmButton.disabled =
         true;
+
+
+    /*
+        Replay the pear animation every
+        time this screen is opened.
+    */
+
+    requestAnimationFrame(
+        () => {
+            playIntroAnimation();
+        }
+    );
 }
 
 
@@ -1308,12 +1259,26 @@ function showCountdown() {
 
 /* =========================================
    SCHOOL DROPDOWN
+
+   IMPORTANT:
+   Changing the dropdown DOES NOT select
+   the school.
+
+   It ONLY enables the Continue button.
 ========================================= */
 
 schoolSelect
     .addEventListener(
         "change",
-        () => {
+        event => {
+
+            /*
+                Stop this change event from
+                triggering anything elsewhere.
+            */
+
+            event.stopPropagation();
+
 
             const value =
                 schoolSelect.value;
@@ -1326,10 +1291,21 @@ schoolSelect
     );
 
 
+/* =========================================
+   CONTINUE
+
+   This is the ONLY place where a newly
+   chosen school is saved/opened.
+========================================= */
+
 schoolConfirmButton
     .addEventListener(
         "click",
-        () => {
+        event => {
+
+            event.preventDefault();
+            event.stopPropagation();
+
 
             const value =
                 schoolSelect.value;
@@ -1339,7 +1315,6 @@ schoolConfirmButton
                 !value ||
                 !schools[value]
             ) {
-
                 return;
             }
 
@@ -1399,8 +1374,7 @@ function applyTheme(
     save = true
 ) {
 
-    document
-        .documentElement
+    document.documentElement
         .style
         .setProperty(
             "--background",
@@ -1408,8 +1382,7 @@ function applyTheme(
         );
 
 
-    document
-        .documentElement
+    document.documentElement
         .style
         .setProperty(
             "--text",
@@ -1530,15 +1503,11 @@ themeToggle
                     );
 
 
-            if (
-                isHidden
-            ) {
-
+            if (isHidden) {
                 openThemePanel();
             }
 
             else {
-
                 closeThemePanel();
             }
         }
@@ -1582,20 +1551,16 @@ themePresets
     .forEach(
         button => {
 
-            button
-                .addEventListener(
-                    "click",
-                    () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                        applyTheme(
-                            button.dataset
-                                .background,
-
-                            button.dataset
-                                .text
-                        );
-                    }
-                );
+                    applyTheme(
+                        button.dataset.background,
+                        button.dataset.text
+                    );
+                }
+            );
         }
     );
 
@@ -1622,7 +1587,6 @@ document
                 event.key ===
                 "Escape"
             ) {
-
                 closeThemePanel();
             }
         }
@@ -1641,7 +1605,6 @@ document
                         "hidden"
                     )
             ) {
-
                 return;
             }
 
@@ -1650,12 +1613,10 @@ document
                 themePanel.contains(
                     event.target
                 ) ||
-
                 themeToggle.contains(
                     event.target
                 )
             ) {
-
                 return;
             }
 
