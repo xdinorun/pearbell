@@ -4,8 +4,8 @@ const schoolScreen =
 const countdownScreen =
     document.getElementById("countdown-screen");
 
-const schoolButtons =
-    document.querySelectorAll(".school-button");
+const schoolSelect =
+    document.getElementById("school-select");
 
 const changeSchoolButton =
     document.getElementById("change-school");
@@ -22,8 +22,43 @@ const currentPeriodEl =
 const periodTimesEl =
     document.getElementById("period-times");
 
+const nextBlockContainer =
+    document.getElementById("next-block-container");
+
+const nextPeriodEl =
+    document.getElementById("next-period");
+
+const nextPeriodTimesEl =
+    document.getElementById("next-period-times");
+
 const schoolNameEl =
     document.getElementById("school-name");
+
+
+/* =========================================
+   THEME ELEMENTS
+========================================= */
+
+const themeToggle =
+    document.getElementById("theme-toggle");
+
+const themePanel =
+    document.getElementById("theme-panel");
+
+const themeClose =
+    document.getElementById("theme-close");
+
+const backgroundColorInput =
+    document.getElementById("background-color");
+
+const textColorInput =
+    document.getElementById("text-color");
+
+const resetThemeButton =
+    document.getElementById("reset-theme");
+
+const themePresets =
+    document.querySelectorAll(".theme-preset");
 
 
 /* =========================================
@@ -47,14 +82,17 @@ const schools = {
 ========================================= */
 
 let selectedSchool =
-    localStorage.getItem("pearbell-school");
+    localStorage.getItem(
+        "pearbell-school"
+    );
 
 
 /* =========================================
-   DATE / TIME HELPERS
+   DATE HELPERS
 ========================================= */
 
 function getDateString(date) {
+
     const year =
         date.getFullYear();
 
@@ -68,13 +106,8 @@ function getDateString(date) {
             date.getDate()
         ).padStart(2, "0");
 
-    return `${year}-${month}-${day}`;
-}
-
-
-function getLocalDateString() {
-    return getDateString(
-        new Date()
+    return (
+        `${year}-${month}-${day}`
     );
 }
 
@@ -83,26 +116,29 @@ function createDateWithTime(
     baseDate,
     timeString
 ) {
+
     const [hours, minutes] =
         timeString
             .split(":")
             .map(Number);
 
-    const date =
+    const result =
         new Date(baseDate);
 
-    date.setHours(
+    result.setHours(
         hours,
         minutes,
         0,
         0
     );
 
-    return date;
+    return result;
 }
 
 
-function timeToDate(timeString) {
+function timeToDate(
+    timeString
+) {
     return createDateWithTime(
         new Date(),
         timeString
@@ -110,7 +146,10 @@ function timeToDate(timeString) {
 }
 
 
-function formatTime(timeString) {
+function formatTime(
+    timeString
+) {
+
     const date =
         createDateWithTime(
             new Date(),
@@ -127,34 +166,37 @@ function formatTime(timeString) {
 }
 
 
-function formatNextSchoolDate(
+function formatDateAndTime(
     date,
     timeString
 ) {
-    const schoolTime =
+
+    const dateWithTime =
         createDateWithTime(
             date,
             timeString
         );
 
     const dateText =
-        schoolTime.toLocaleDateString(
-            [],
-            {
-                weekday: "long",
-                month: "short",
-                day: "numeric"
-            }
-        );
+        dateWithTime
+            .toLocaleDateString(
+                [],
+                {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric"
+                }
+            );
 
     const timeText =
-        schoolTime.toLocaleTimeString(
-            [],
-            {
-                hour: "numeric",
-                minute: "2-digit"
-            }
-        );
+        dateWithTime
+            .toLocaleTimeString(
+                [],
+                {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            );
 
     return `${dateText} • ${timeText}`;
 }
@@ -168,9 +210,11 @@ function isOutsideSchoolYear(
     school,
     date = new Date()
 ) {
+
     if (
         !school.schoolYear ||
-        typeof school.schoolYear !== "object"
+        typeof school.schoolYear
+            !== "object"
     ) {
         return false;
     }
@@ -202,6 +246,7 @@ function getExceptionForDate(
     school,
     date
 ) {
+
     const dateString =
         getDateString(date);
 
@@ -214,22 +259,15 @@ function getExceptionForDate(
 }
 
 
-function getTodayException(school) {
-    return getExceptionForDate(
-        school,
-        new Date()
-    );
-}
-
-
 /* =========================================
-   GET SCHEDULE FOR ANY DATE
+   SCHEDULE FOR DATE
 ========================================= */
 
 function getScheduleForDate(
     school,
     date
 ) {
+
     const day =
         date.getDay();
 
@@ -240,10 +278,6 @@ function getScheduleForDate(
         );
 
 
-    /* -------------------------------------
-       Outside school year
-    ------------------------------------- */
-
     if (
         isOutsideSchoolYear(
             school,
@@ -253,10 +287,6 @@ function getScheduleForDate(
         return [];
     }
 
-
-    /* -------------------------------------
-       Special-date exceptions
-    ------------------------------------- */
 
     if (exception) {
 
@@ -277,7 +307,6 @@ function getScheduleForDate(
 
 
         if (
-            exception.schedule &&
             Array.isArray(
                 exception.schedule
             )
@@ -318,10 +347,6 @@ function getScheduleForDate(
     }
 
 
-    /* -------------------------------------
-       Weekend
-    ------------------------------------- */
-
     if (
         day === 0 ||
         day === 6
@@ -330,23 +355,13 @@ function getScheduleForDate(
     }
 
 
-    /* -------------------------------------
-       Monday
-    ------------------------------------- */
-
     if (
         day === 1 &&
         school.schedules.monday
     ) {
-        return (
-            school.schedules.monday
-        );
+        return school.schedules.monday;
     }
 
-
-    /* -------------------------------------
-       Tuesday / Thursday
-    ------------------------------------- */
 
     if (
         (
@@ -363,10 +378,6 @@ function getScheduleForDate(
     }
 
 
-    /* -------------------------------------
-       Wednesday / Friday
-    ------------------------------------- */
-
     if (
         (
             day === 3 ||
@@ -382,16 +393,10 @@ function getScheduleForDate(
     }
 
 
-    /* -------------------------------------
-       Same schedule every weekday
-    ------------------------------------- */
-
     if (
         school.schedules.default
     ) {
-        return (
-            school.schedules.default
-        );
+        return school.schedules.default;
     }
 
 
@@ -399,31 +404,98 @@ function getScheduleForDate(
 }
 
 
-function getScheduleForToday(school) {
-    return getScheduleForDate(
-        school,
-        new Date()
-    );
-}
-
-
 /* =========================================
-   FIND NEXT SCHOOL START
+   CURRENT / NEXT BLOCK
 ========================================= */
 
-function findNextSchoolStart(school) {
+function findCurrentBlock(
+    schedule
+) {
 
     const now =
         new Date();
 
+    for (
+        let index = 0;
+        index < schedule.length;
+        index++
+    ) {
 
-    /*
-       Search up to 60 days ahead.
+        const block =
+            schedule[index];
 
-       This is enough to cross weekends and
-       normal school breaks while remaining
-       inside the current school-year data.
-    */
+        const start =
+            timeToDate(
+                block.start
+            );
+
+        const end =
+            timeToDate(
+                block.end
+            );
+
+
+        if (
+            now >= start &&
+            now < end
+        ) {
+            return {
+                block,
+                index
+            };
+        }
+    }
+
+    return null;
+}
+
+
+function findNextBlock(
+    schedule
+) {
+
+    const now =
+        new Date();
+
+    for (
+        let index = 0;
+        index < schedule.length;
+        index++
+    ) {
+
+        const block =
+            schedule[index];
+
+        const start =
+            timeToDate(
+                block.start
+            );
+
+        if (
+            start > now
+        ) {
+            return {
+                block,
+                index
+            };
+        }
+    }
+
+    return null;
+}
+
+
+/* =========================================
+   NEXT SCHOOL DAY
+========================================= */
+
+function findNextSchoolStart(
+    school
+) {
+
+    const now =
+        new Date();
+
 
     for (
         let offset = 1;
@@ -446,15 +518,10 @@ function findNextSchoolStart(school) {
         );
 
 
-        /*
-           Stop if this school has a defined
-           school year and we've gone beyond it.
-        */
-
         if (
             school.schoolYear &&
-            typeof school.schoolYear ===
-                "object" &&
+            typeof school.schoolYear
+                === "object" &&
             school.schoolYear.end &&
             getDateString(date) >
                 school.schoolYear.end
@@ -470,19 +537,11 @@ function findNextSchoolStart(school) {
             );
 
 
-        /*
-           We know school occurs, but we don't
-           trust ourselves to know its start time.
-
-           Don't skip over this day and pretend
-           the next normal day is the next day
-           of school.
-        */
-
         if (
             exception?.type ===
             "scheduleUnavailable"
         ) {
+
             return {
                 unavailable: true,
                 date,
@@ -510,7 +569,6 @@ function findNextSchoolStart(school) {
         const firstBlock =
             schedule[0];
 
-
         const start =
             createDateWithTime(
                 date,
@@ -532,66 +590,13 @@ function findNextSchoolStart(school) {
 
 
 /* =========================================
-   CURRENT / NEXT BLOCK
-========================================= */
-
-function findCurrentBlock(schedule) {
-    const now =
-        new Date();
-
-    for (
-        const block of schedule
-    ) {
-        const start =
-            timeToDate(
-                block.start
-            );
-
-        const end =
-            timeToDate(
-                block.end
-            );
-
-        if (
-            now >= start &&
-            now < end
-        ) {
-            return block;
-        }
-    }
-
-    return null;
-}
-
-
-function findNextBlock(schedule) {
-    const now =
-        new Date();
-
-    for (
-        const block of schedule
-    ) {
-        const start =
-            timeToDate(
-                block.start
-            );
-
-        if (
-            start > now
-        ) {
-            return block;
-        }
-    }
-
-    return null;
-}
-
-
-/* =========================================
    COUNTDOWN FORMAT
 ========================================= */
 
-function formatCountdown(milliseconds) {
+function formatCountdown(
+    milliseconds
+) {
+
     const totalSeconds =
         Math.max(
             0,
@@ -627,11 +632,6 @@ function formatCountdown(milliseconds) {
         totalSeconds % 60;
 
 
-    /*
-       Longer countdowns:
-       2d 14:32:08
-    */
-
     if (
         days > 0
     ) {
@@ -644,11 +644,6 @@ function formatCountdown(milliseconds) {
     }
 
 
-    /*
-       Same-day countdowns over one hour:
-       2:32:08
-    */
-
     if (
         hours > 0
     ) {
@@ -660,11 +655,6 @@ function formatCountdown(milliseconds) {
     }
 
 
-    /*
-       Normal class countdown:
-       32:08
-    */
-
     return (
         `${minutes}:` +
         `${String(seconds).padStart(2, "0")}`
@@ -673,26 +663,66 @@ function formatCountdown(milliseconds) {
 
 
 /* =========================================
-   SHOW NEXT SCHOOL COUNTDOWN
+   NEXT-BLOCK DISPLAY
+========================================= */
+
+function showNextBlockInfo(
+    schedule,
+    currentIndex
+) {
+
+    const next =
+        schedule[
+            currentIndex + 1
+        ];
+
+
+    if (!next) {
+
+        nextBlockContainer
+            .classList
+            .add("hidden");
+
+        return;
+    }
+
+
+    nextBlockContainer
+        .classList
+        .remove("hidden");
+
+
+    nextPeriodEl.textContent =
+        next.name;
+
+
+    nextPeriodTimesEl.textContent =
+        `${formatTime(next.start)} → ${formatTime(next.end)}`;
+}
+
+
+/* =========================================
+   NEXT SCHOOL COUNTDOWN
 ========================================= */
 
 function showNextSchoolCountdown(
     school,
-    currentLabel
+    statusLabel
 ) {
+
     const nextSchool =
         findNextSchoolStart(
             school
         );
 
 
-    /*
-       No upcoming verified school day found.
-    */
+    nextBlockContainer
+        .classList
+        .add("hidden");
 
-    if (
-        !nextSchool
-    ) {
+
+    if (!nextSchool) {
+
         countdownEl.textContent =
             "—";
 
@@ -700,7 +730,7 @@ function showNextSchoolCountdown(
             "No upcoming schedule available";
 
         currentPeriodEl.textContent =
-            currentLabel;
+            statusLabel;
 
         periodTimesEl.textContent =
             "";
@@ -709,15 +739,10 @@ function showNextSchoolCountdown(
     }
 
 
-    /*
-       The next school day is known to have
-       a special schedule, but we don't know
-       its exact starting time.
-    */
-
     if (
         nextSchool.unavailable
     ) {
+
         countdownEl.textContent =
             "—";
 
@@ -725,7 +750,7 @@ function showNextSchoolCountdown(
             "Next school schedule not verified";
 
         currentPeriodEl.textContent =
-            currentLabel;
+            statusLabel;
 
         periodTimesEl.textContent =
             nextSchool.label;
@@ -750,11 +775,11 @@ function showNextSchoolCountdown(
 
 
     currentPeriodEl.textContent =
-        currentLabel;
+        statusLabel;
 
 
     periodTimesEl.textContent =
-        `Next: ${formatNextSchoolDate(
+        `Next: ${formatDateAndTime(
             nextSchool.date,
             nextSchool.firstBlock.start
         )}`;
@@ -762,7 +787,7 @@ function showNextSchoolCountdown(
 
 
 /* =========================================
-   MAIN COUNTDOWN
+   UPDATE COUNTDOWN
 ========================================= */
 
 function updateCountdown() {
@@ -775,40 +800,47 @@ function updateCountdown() {
 
 
     const school =
-        schools[selectedSchool];
+        schools[
+            selectedSchool
+        ];
 
 
-    if (
-        !school
-    ) {
+    if (!school) {
         return;
     }
-
-
-    const schedule =
-        getScheduleForToday(
-            school
-        );
-
-    const exception =
-        getTodayException(
-            school
-        );
 
 
     schoolNameEl.textContent =
         school.name;
 
 
+    const now =
+        new Date();
+
+    const schedule =
+        getScheduleForDate(
+            school,
+            now
+        );
+
+    const exception =
+        getExceptionForDate(
+            school,
+            now
+        );
+
+
     /* -------------------------------------
-       Outside school year
+       OUTSIDE SCHOOL YEAR
     ------------------------------------- */
 
     if (
         isOutsideSchoolYear(
-            school
+            school,
+            now
         )
     ) {
+
         countdownEl.textContent =
             "—";
 
@@ -821,19 +853,23 @@ function updateCountdown() {
         periodTimesEl.textContent =
             "";
 
+        nextBlockContainer
+            .classList
+            .add("hidden");
+
         return;
     }
 
 
     /* -------------------------------------
-       Today's schedule is intentionally
-       unavailable
+       UNVERIFIED SPECIAL SCHEDULE
     ------------------------------------- */
 
     if (
         exception?.type ===
         "scheduleUnavailable"
     ) {
+
         countdownEl.textContent =
             "—";
 
@@ -847,21 +883,23 @@ function updateCountdown() {
         periodTimesEl.textContent =
             "";
 
+        nextBlockContainer
+            .classList
+            .add("hidden");
+
         return;
     }
 
 
     /* -------------------------------------
-       No school today
-
-       Still count down to the next known
-       school start.
+       NO SCHOOL
     ------------------------------------- */
 
     if (
         exception?.type ===
         "noSchool"
     ) {
+
         showNextSchoolCountdown(
             school,
             exception.label ||
@@ -873,23 +911,22 @@ function updateCountdown() {
 
 
     /* -------------------------------------
-       Weekend
-
-       Count down to Monday / next valid
-       school day.
+       WEEKEND / NO SCHEDULE
     ------------------------------------- */
 
     if (
         schedule.length === 0
     ) {
+
         const day =
-            new Date().getDay();
+            now.getDay();
 
 
         if (
             day === 0 ||
             day === 6
         ) {
+
             showNextSchoolCountdown(
                 school,
                 "Weekend"
@@ -897,38 +934,40 @@ function updateCountdown() {
         }
 
         else {
+
             showNextSchoolCountdown(
                 school,
                 "No School"
             );
         }
 
-
         return;
     }
 
 
     /* -------------------------------------
-       Current block
+       CURRENT BLOCK
     ------------------------------------- */
 
-    const currentBlock =
+    const current =
         findCurrentBlock(
             schedule
         );
 
 
-    if (
-        currentBlock
-    ) {
+    if (current) {
+
+        const block =
+            current.block;
+
         const end =
             timeToDate(
-                currentBlock.end
+                block.end
             );
 
         const remaining =
             end -
-            new Date();
+            now;
 
 
         countdownEl.textContent =
@@ -938,19 +977,21 @@ function updateCountdown() {
 
 
         countdownLabelEl.textContent =
-            `until ${currentBlock.name} ends`;
+            `until ${block.name} ends`;
 
 
         currentPeriodEl.textContent =
-            currentBlock.name;
+            block.name;
 
 
         periodTimesEl.textContent =
-            `${formatTime(
-                currentBlock.start
-            )} → ${formatTime(
-                currentBlock.end
-            )}`;
+            `${formatTime(block.start)} → ${formatTime(block.end)}`;
+
+
+        showNextBlockInfo(
+            schedule,
+            current.index
+        );
 
 
         return;
@@ -958,26 +999,28 @@ function updateCountdown() {
 
 
     /* -------------------------------------
-       Before school / gap before block
+       BEFORE SCHOOL / GAP
     ------------------------------------- */
 
-    const nextBlock =
+    const next =
         findNextBlock(
             schedule
         );
 
 
-    if (
-        nextBlock
-    ) {
+    if (next) {
+
+        const block =
+            next.block;
+
         const start =
             timeToDate(
-                nextBlock.start
+                block.start
             );
 
         const remaining =
             start -
-            new Date();
+            now;
 
 
         countdownEl.textContent =
@@ -987,7 +1030,7 @@ function updateCountdown() {
 
 
         countdownLabelEl.textContent =
-            `until ${nextBlock.name} starts`;
+            `until ${block.name} starts`;
 
 
         currentPeriodEl.textContent =
@@ -995,9 +1038,20 @@ function updateCountdown() {
 
 
         periodTimesEl.textContent =
-            `First bell: ${formatTime(
-                nextBlock.start
-            )}`;
+            `First bell: ${formatTime(block.start)}`;
+
+
+        nextBlockContainer
+            .classList
+            .remove("hidden");
+
+
+        nextPeriodEl.textContent =
+            block.name;
+
+
+        nextPeriodTimesEl.textContent =
+            `${formatTime(block.start)} → ${formatTime(block.end)}`;
 
 
         return;
@@ -1006,9 +1060,6 @@ function updateCountdown() {
 
     /* -------------------------------------
        AFTER SCHOOL
-
-       Instead of stopping, count down
-       to the next school day.
     ------------------------------------- */
 
     showNextSchoolCountdown(
@@ -1019,10 +1070,11 @@ function updateCountdown() {
 
 
 /* =========================================
-   SCREEN NAVIGATION
+   SCHOOL NAVIGATION
 ========================================= */
 
 function showSchoolPicker() {
+
     schoolScreen
         .classList
         .remove("hidden");
@@ -1030,10 +1082,15 @@ function showSchoolPicker() {
     countdownScreen
         .classList
         .add("hidden");
+
+
+    schoolSelect.value =
+        "";
 }
 
 
 function showCountdown() {
+
     schoolScreen
         .classList
         .add("hidden");
@@ -1041,41 +1098,50 @@ function showCountdown() {
     countdownScreen
         .classList
         .remove("hidden");
+
 
     updateCountdown();
 }
 
 
 /* =========================================
-   SCHOOL BUTTONS
+   SCHOOL DROPDOWN
 ========================================= */
 
-schoolButtons.forEach(
-    button => {
+schoolSelect
+    .addEventListener(
+        "change",
+        () => {
 
-        button.addEventListener(
-            "click",
-            () => {
-
-                selectedSchool =
-                    button.dataset.school;
+            const value =
+                schoolSelect.value;
 
 
-                localStorage.setItem(
-                    "pearbell-school",
-                    selectedSchool
-                );
-
-
-                showCountdown();
+            if (
+                !value ||
+                !schools[value]
+            ) {
+                return;
             }
-        );
-    }
-);
+
+
+            selectedSchool =
+                value;
+
+
+            localStorage.setItem(
+                "pearbell-school",
+                selectedSchool
+            );
+
+
+            showCountdown();
+        }
+    );
 
 
 /* =========================================
-   RECHOOSE SCHOOL
+   CHANGE SCHOOL
 ========================================= */
 
 changeSchoolButton
@@ -1098,17 +1164,286 @@ changeSchoolButton
 
 
 /* =========================================
+   THEMES
+========================================= */
+
+const DEFAULT_BACKGROUND =
+    "#ffffff";
+
+const DEFAULT_TEXT =
+    "#111111";
+
+
+function applyTheme(
+    background,
+    text,
+    save = true
+) {
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--background",
+            background
+        );
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--text",
+            text
+        );
+
+
+    backgroundColorInput.value =
+        background;
+
+    textColorInput.value =
+        text;
+
+
+    const themeColorMeta =
+        document.querySelector(
+            'meta[name="theme-color"]'
+        );
+
+
+    if (themeColorMeta) {
+
+        themeColorMeta
+            .setAttribute(
+                "content",
+                background
+            );
+    }
+
+
+    if (save) {
+
+        localStorage.setItem(
+            "pearbell-background",
+            background
+        );
+
+        localStorage.setItem(
+            "pearbell-text",
+            text
+        );
+    }
+}
+
+
+function loadTheme() {
+
+    const background =
+        localStorage.getItem(
+            "pearbell-background"
+        ) ||
+        DEFAULT_BACKGROUND;
+
+
+    const text =
+        localStorage.getItem(
+            "pearbell-text"
+        ) ||
+        DEFAULT_TEXT;
+
+
+    applyTheme(
+        background,
+        text,
+        false
+    );
+}
+
+
+function openThemePanel() {
+
+    themePanel
+        .classList
+        .remove("hidden");
+
+
+    themeToggle
+        .setAttribute(
+            "aria-expanded",
+            "true"
+        );
+}
+
+
+function closeThemePanel() {
+
+    themePanel
+        .classList
+        .add("hidden");
+
+
+    themeToggle
+        .setAttribute(
+            "aria-expanded",
+            "false"
+        );
+}
+
+
+themeToggle
+    .addEventListener(
+        "click",
+        () => {
+
+            const isHidden =
+                themePanel
+                    .classList
+                    .contains(
+                        "hidden"
+                    );
+
+
+            if (isHidden) {
+                openThemePanel();
+            }
+
+            else {
+                closeThemePanel();
+            }
+        }
+    );
+
+
+themeClose
+    .addEventListener(
+        "click",
+        closeThemePanel
+    );
+
+
+backgroundColorInput
+    .addEventListener(
+        "input",
+        () => {
+
+            applyTheme(
+                backgroundColorInput.value,
+                textColorInput.value
+            );
+        }
+    );
+
+
+textColorInput
+    .addEventListener(
+        "input",
+        () => {
+
+            applyTheme(
+                backgroundColorInput.value,
+                textColorInput.value
+            );
+        }
+    );
+
+
+themePresets
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    applyTheme(
+                        button.dataset.background,
+                        button.dataset.text
+                    );
+                }
+            );
+        }
+    );
+
+
+resetThemeButton
+    .addEventListener(
+        "click",
+        () => {
+
+            applyTheme(
+                DEFAULT_BACKGROUND,
+                DEFAULT_TEXT
+            );
+        }
+    );
+
+
+document
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+                closeThemePanel();
+            }
+        }
+    );
+
+
+document
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                themePanel
+                    .classList
+                    .contains(
+                        "hidden"
+                    )
+            ) {
+                return;
+            }
+
+
+            if (
+                themePanel.contains(
+                    event.target
+                ) ||
+                themeToggle.contains(
+                    event.target
+                )
+            ) {
+                return;
+            }
+
+
+            closeThemePanel();
+        }
+    );
+
+
+/* =========================================
    INITIAL LOAD
 ========================================= */
+
+loadTheme();
+
 
 if (
     selectedSchool &&
     schools[selectedSchool]
 ) {
+
     showCountdown();
 }
 
 else {
+
+    selectedSchool =
+        null;
+
     showSchoolPicker();
 }
 
