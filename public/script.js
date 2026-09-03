@@ -11,65 +11,7 @@ const periodTimesEl = document.getElementById("period-times");
 const schoolNameEl = document.getElementById("school-name");
 
 const schools = {
-    wilcox: {
-        name: "Adrian Wilcox High School",
-
-        schedules: {
-            monday: [
-                { name: "1st Period", start: "08:45", end: "09:35" },
-                { name: "Passing Period", start: "09:35", end: "09:40" },
-
-                { name: "2nd Period", start: "09:40", end: "10:30" },
-                { name: "Passing Period", start: "10:30", end: "10:40" },
-
-                { name: "3rd Period", start: "10:40", end: "11:30" },
-                { name: "Passing Period", start: "11:30", end: "11:35" },
-
-                { name: "4th Period + Announcements", start: "11:35", end: "12:30" },
-
-                { name: "Lunch", start: "12:30", end: "13:05" },
-                { name: "Passing Period", start: "13:05", end: "13:10" },
-
-                { name: "5th Period", start: "13:10", end: "14:00" },
-                { name: "Passing Period", start: "14:00", end: "14:05" },
-
-                { name: "6th Period", start: "14:05", end: "14:55" },
-                { name: "Passing Period", start: "14:55", end: "15:00" },
-
-                { name: "7th Period", start: "15:00", end: "15:50" }
-            ],
-
-            tuesdayThursday: [
-                { name: "1st Period", start: "08:45", end: "10:15" },
-                { name: "Passing Period", start: "10:15", end: "10:25" },
-
-                { name: "3rd Period + Announcements", start: "10:25", end: "12:00" },
-
-                { name: "Lunch", start: "12:00", end: "12:35" },
-                { name: "Passing Period", start: "12:35", end: "12:40" },
-
-                { name: "5th Period", start: "12:40", end: "14:10" },
-                { name: "Passing Period", start: "14:10", end: "14:15" },
-
-                { name: "7th Period", start: "14:15", end: "15:45" }
-            ],
-
-            wednesdayFriday: [
-                { name: "2nd Period", start: "08:45", end: "10:15" },
-                { name: "Passing Period", start: "10:15", end: "10:25" },
-
-                { name: "SSR + Announcements", start: "10:25", end: "11:20" },
-
-                { name: "Lunch", start: "11:20", end: "11:50" },
-                { name: "Passing Period", start: "11:50", end: "12:00" },
-
-                { name: "4th Period", start: "12:00", end: "13:30" },
-                { name: "Passing Period", start: "13:30", end: "13:35" },
-
-                { name: "6th Period", start: "13:35", end: "15:05" }
-            ]
-        }
-    },
+    wilcox: window.PearBellSchedules.wilcox,
 
     "santa-clara": {
         name: "Santa Clara High School",
@@ -94,7 +36,9 @@ const schools = {
 
                 { name: "6th Period", start: "13:48", end: "14:38" }
             ]
-        }
+        },
+
+        exceptions: {}
     },
 
     cupertino: {
@@ -163,7 +107,9 @@ const schools = {
 
                 { name: "6th Period", start: "13:35", end: "15:05" }
             ]
-        }
+        },
+
+        exceptions: {}
     }
 };
 
@@ -182,7 +128,7 @@ function formatTime(timeString) {
     const [hours, minutes] = timeString.split(":").map(Number);
 
     const date = new Date();
-    date.setHours(hours, minutes);
+    date.setHours(hours, minutes, 0, 0);
 
     return date.toLocaleTimeString([], {
         hour: "numeric",
@@ -190,50 +136,71 @@ function formatTime(timeString) {
     });
 }
 
+function getLocalDateString() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
 function getScheduleForToday(school) {
     const day = new Date().getDay();
+    const today = getLocalDateString();
 
-    // Sunday or Saturday
+    // Check for a special-date exception first.
+    const exception = school.exceptions?.[today];
+
+    if (exception) {
+        if (exception.type === "noSchool") {
+            return [];
+        }
+
+        if (exception.schedule) {
+            return exception.schedule;
+        }
+    }
+
+    // Weekend
     if (day === 0 || day === 6) {
         return [];
     }
 
-    // Wilcox
-    if (school === schools.wilcox) {
-        if (day === 1) {
-            return school.schedules.monday;
-        }
-
-        if (day === 2 || day === 4) {
-            return school.schedules.tuesdayThursday;
-        }
-
-        if (day === 3 || day === 5) {
-            return school.schedules.wednesdayFriday;
-        }
+    // Monday schedule
+    if (day === 1 && school.schedules.monday) {
+        return school.schedules.monday;
     }
 
-    // Cupertino
-    if (school === schools.cupertino) {
-        if (day === 1) {
-            return school.schedules.monday;
-        }
-
-        if (day === 2 || day === 4) {
-            return school.schedules.tuesdayThursday;
-        }
-
-        if (day === 3 || day === 5) {
-            return school.schedules.wednesdayFriday;
-        }
+    // Tuesday / Thursday schedule
+    if (
+        (day === 2 || day === 4) &&
+        school.schedules.tuesdayThursday
+    ) {
+        return school.schedules.tuesdayThursday;
     }
 
-    // Schools that currently use one default weekday schedule
+    // Wednesday / Friday schedule
+    if (
+        (day === 3 || day === 5) &&
+        school.schedules.wednesdayFriday
+    ) {
+        return school.schedules.wednesdayFriday;
+    }
+
+    // Simple schools with the same schedule every weekday
     if (school.schedules.default) {
         return school.schedules.default;
     }
 
     return [];
+}
+
+function getTodayException(school) {
+    const today = getLocalDateString();
+
+    return school.exceptions?.[today] || null;
 }
 
 function findCurrentBlock(schedule) {
@@ -294,13 +261,30 @@ function updateCountdown() {
     }
 
     const schedule = getScheduleForToday(school);
+    const exception = getTodayException(school);
 
     schoolNameEl.textContent = school.name;
 
     if (schedule.length === 0) {
         countdownEl.textContent = "—";
-        countdownLabelEl.textContent = "No school today";
-        currentPeriodEl.textContent = "Weekend";
+
+        if (exception?.type === "noSchool") {
+            countdownLabelEl.textContent =
+                exception.label || "No school today";
+
+            currentPeriodEl.textContent = "No School";
+        } else {
+            const day = new Date().getDay();
+
+            if (day === 0 || day === 6) {
+                countdownLabelEl.textContent = "No school today";
+                currentPeriodEl.textContent = "Weekend";
+            } else {
+                countdownLabelEl.textContent = "No schedule today";
+                currentPeriodEl.textContent = "No School";
+            }
+        }
+
         periodTimesEl.textContent = "";
 
         return;
@@ -336,10 +320,10 @@ function updateCountdown() {
         countdownLabelEl.textContent =
             `until ${nextBlock.name} starts`;
 
-        currentPeriodEl.textContent = "Between periods";
+        currentPeriodEl.textContent = "Before School";
 
         periodTimesEl.textContent =
-            `Next: ${formatTime(nextBlock.start)}`;
+            `First bell: ${formatTime(nextBlock.start)}`;
 
         return;
     }
