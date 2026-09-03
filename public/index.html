@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="PearBell — a simple, fast school bell schedule countdown."
+    >
 
     <title>PearBell</title>
 
@@ -11,67 +20,115 @@
 
 <body>
 
-    <!-- School selection screen -->
+    <!-- =========================================
+         SCHOOL SELECTION SCREEN
+    ========================================== -->
+
     <main id="school-screen" class="screen">
+
         <div class="school-picker">
+
             <div class="brand">
                 <span class="pear">🍐</span>
                 <h1>PearBell</h1>
             </div>
 
-            <p class="subtitle">Choose your school</p>
+            <p class="subtitle">
+                Choose your school
+            </p>
 
             <div class="school-list">
-                <button class="school-button" data-school="wilcox">
+
+                <button
+                    class="school-button"
+                    data-school="wilcox"
+                    type="button"
+                >
                     Adrian Wilcox High School
                 </button>
 
-                <button class="school-button" data-school="santa-clara">
+                <button
+                    class="school-button"
+                    data-school="santa-clara"
+                    type="button"
+                >
                     Santa Clara High School
                 </button>
 
-                <button class="school-button" data-school="cupertino">
+                <button
+                    class="school-button"
+                    data-school="cupertino"
+                    type="button"
+                >
                     Cupertino High School
                 </button>
+
             </div>
 
             <p class="help">
                 Don't see your school?
-                <a href="mailto:help@pearbell.org">help@pearbell.org</a>
+                <a href="mailto:help@pearbell.org">
+                    help@pearbell.org
+                </a>
             </p>
+
         </div>
+
     </main>
 
 
-    <!-- Main countdown screen -->
-    <main id="countdown-screen" class="screen hidden">
+    <!-- =========================================
+         COUNTDOWN SCREEN
+    ========================================== -->
+
+    <main
+        id="countdown-screen"
+        class="screen hidden"
+    >
 
         <header class="top-bar">
 
+            <!-- Current period information -->
+
             <div class="period-info">
-                <span id="current-period">4th Period</span>
-                <span id="period-times">10:42 AM → 11:29 AM</span>
+
+                <span id="current-period">
+                    Current Period
+                </span>
+
+                <span id="period-times">
+                    --:-- → --:--
+                </span>
+
             </div>
 
-            <button id="change-school">
+
+            <!-- Change school -->
+
+            <button
+                id="change-school"
+                type="button"
+            >
                 Rechoose School
             </button>
 
         </header>
 
 
+        <!-- Main countdown -->
+
         <section class="countdown-container">
 
             <div id="countdown">
-                12:43
+                --:--
             </div>
 
             <div id="countdown-label">
-                until 4th Period ends
+                Loading schedule...
             </div>
 
             <div id="school-name">
-                Adrian Wilcox High School
+                PearBell
             </div>
 
         </section>
@@ -79,8 +136,21 @@
     </main>
 
 
-<script src="schedules/wilcox.js"></script>
-<script src="script.js"></script>
+    <!-- =========================================
+         SCHEDULE DATA
+
+         School schedule files MUST load before
+         the main PearBell script.
+    ========================================== -->
+
+    <script src="schedules/wilcox.js"></script>
+
+
+    <!-- =========================================
+         PEARBELL
+    ========================================== -->
+
+    <script src="script.js"></script>
 
 </body>
 </html>
