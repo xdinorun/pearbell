@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,29 +17,48 @@
 
     <title>PearBell</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!-- =========================================
-         SCHOOL SELECTION SCREEN
-    ========================================== -->
 
-    <main id="school-screen" class="screen">
+    <!-- =====================================
+         SCHOOL PICKER
+    ====================================== -->
+
+    <main
+        id="school-screen"
+        class="screen"
+    >
 
         <div class="school-picker">
 
             <div class="brand">
-                <span class="pear">🍐</span>
-                <h1>PearBell</h1>
+
+                <span class="pear">
+                    🍐
+                </span>
+
+                <h1>
+                    PearBell
+                </h1>
+
             </div>
+
 
             <p class="subtitle">
                 Choose your school
             </p>
 
+
             <div class="school-list">
+
 
                 <button
                     class="school-button"
@@ -47,6 +68,7 @@
                     Adrian Wilcox High School
                 </button>
 
+
                 <button
                     class="school-button"
                     data-school="santa-clara"
@@ -54,6 +76,7 @@
                 >
                     Santa Clara High School
                 </button>
+
 
                 <button
                     class="school-button"
@@ -63,13 +86,18 @@
                     Cupertino High School
                 </button>
 
+
             </div>
 
+
             <p class="help">
+
                 Don't see your school?
+
                 <a href="mailto:help@pearbell.org">
                     help@pearbell.org
                 </a>
+
             </p>
 
         </div>
@@ -77,18 +105,18 @@
     </main>
 
 
-    <!-- =========================================
-         COUNTDOWN SCREEN
-    ========================================== -->
+    <!-- =====================================
+         COUNTDOWN
+    ====================================== -->
 
     <main
         id="countdown-screen"
         class="screen hidden"
     >
 
+
         <header class="top-bar">
 
-            <!-- Current period information -->
 
             <div class="period-info">
 
@@ -103,8 +131,6 @@
             </div>
 
 
-            <!-- Change school -->
-
             <button
                 id="change-school"
                 type="button"
@@ -112,45 +138,54 @@
                 Rechoose School
             </button>
 
+
         </header>
 
 
-        <!-- Main countdown -->
-
         <section class="countdown-container">
+
 
             <div id="countdown">
                 --:--
             </div>
 
+
             <div id="countdown-label">
                 Loading schedule...
             </div>
+
 
             <div id="school-name">
                 PearBell
             </div>
 
+
         </section>
+
 
     </main>
 
 
-    <!-- =========================================
-         SCHEDULE DATA
+    <!-- =====================================
+         SCHOOL SCHEDULES
 
-         School schedule files MUST load before
-         the main PearBell script.
-    ========================================== -->
+         These MUST load before script.js
+    ====================================== -->
 
     <script src="schedules/wilcox.js"></script>
 
+    <script src="schedules/santa-clara.js"></script>
 
-    <!-- =========================================
-         PEARBELL
-    ========================================== -->
+    <script src="schedules/cupertino.js"></script>
+
+
+    <!-- =====================================
+         PEARBELL APP
+    ====================================== -->
 
     <script src="script.js"></script>
 
+
 </body>
+
 </html>
