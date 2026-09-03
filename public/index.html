@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -15,18 +14,18 @@
         content="PearBell — a simple, fast school bell schedule countdown."
     >
 
+    <meta name="theme-color" content="#ffffff">
+
     <title>PearBell</title>
 
     <link
         rel="stylesheet"
         href="style.css"
     >
-
 </head>
 
 
 <body>
-
 
     <!-- =====================================
          SCHOOL PICKER
@@ -37,72 +36,82 @@
         class="screen"
     >
 
-        <div class="school-picker">
+        <section class="school-picker">
 
-            <div class="brand">
+            <!-- Animated logo -->
 
-                <span class="pear">
+            <div class="intro-logo">
+
+                <div
+                    class="rolling-pear"
+                    aria-hidden="true"
+                >
                     🍐
-                </span>
+                </div>
 
-                <h1>
+                <h1 class="intro-title">
                     PearBell
                 </h1>
 
             </div>
 
 
-            <p class="subtitle">
-                Choose your school
-            </p>
+            <div class="school-select-area">
 
-
-            <div class="school-list">
-
-
-                <button
-                    class="school-button"
-                    data-school="wilcox"
-                    type="button"
+                <label
+                    for="school-select"
+                    class="school-label"
                 >
-                    Adrian Wilcox High School
-                </button>
+                    Choose your school
+                </label>
 
 
-                <button
-                    class="school-button"
-                    data-school="santa-clara"
-                    type="button"
-                >
-                    Santa Clara High School
-                </button>
+                <div class="select-wrapper">
+
+                    <select
+                        id="school-select"
+                        aria-label="Choose your school"
+                    >
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Select your school
+                        </option>
+
+                        <option value="wilcox">
+                            Adrian Wilcox High School
+                        </option>
+
+                        <option value="santa-clara">
+                            Santa Clara High School
+                        </option>
+
+                        <option value="cupertino">
+                            Cupertino High School
+                        </option>
+                    </select>
+
+                </div>
 
 
-                <button
-                    class="school-button"
-                    data-school="cupertino"
-                    type="button"
-                >
-                    Cupertino High School
-                </button>
+                <p class="help">
 
+                    Don't see your school?
+
+                    <a href="mailto:help@pearbell.org">
+                        help@pearbell.org
+                    </a>
+
+                </p>
 
             </div>
 
-
-            <p class="help">
-
-                Don't see your school?
-
-                <a href="mailto:help@pearbell.org">
-                    help@pearbell.org
-                </a>
-
-            </p>
-
-        </div>
+        </section>
 
     </main>
+
 
 
     <!-- =====================================
@@ -114,38 +123,22 @@
         class="screen hidden"
     >
 
+        <header class="countdown-header">
 
-        <header class="top-bar">
-
-
-            <div class="period-info">
-
-                <span id="current-period">
-                    Current Period
-                </span>
-
-                <span id="period-times">
-                    --:-- → --:--
-                </span>
-
+            <div class="mini-brand">
+                <span aria-hidden="true">🍐</span>
+                <span>PearBell</span>
             </div>
-
-
-            <button
-                id="change-school"
-                type="button"
-            >
-                Rechoose School
-            </button>
-
 
         </header>
 
 
         <section class="countdown-container">
 
-
-            <div id="countdown">
+            <div
+                id="countdown"
+                aria-live="polite"
+            >
                 --:--
             </div>
 
@@ -155,36 +148,228 @@
             </div>
 
 
+            <div class="current-block">
+
+                <div id="current-period">
+                    Current Period
+                </div>
+
+                <div id="period-times">
+                    --:-- → --:--
+                </div>
+
+            </div>
+
+
+            <div
+                id="next-block-container"
+                class="next-block"
+            >
+
+                <div class="next-divider"></div>
+
+                <div>
+                    <span class="next-prefix">
+                        Next:
+                    </span>
+
+                    <span id="next-period">
+                        —
+                    </span>
+                </div>
+
+                <div id="next-period-times">
+                    —
+                </div>
+
+            </div>
+
+
+            <button
+                id="change-school"
+                type="button"
+            >
+                <span aria-hidden="true">
+                    ⇄
+                </span>
+
+                Change School
+            </button>
+
+
             <div id="school-name">
                 PearBell
             </div>
 
-
         </section>
-
 
     </main>
 
 
-    <!-- =====================================
-         SCHOOL SCHEDULES
 
-         These MUST load before script.js
+    <!-- =====================================
+         THEME BUTTON
+    ====================================== -->
+
+    <button
+        id="theme-toggle"
+        type="button"
+        aria-label="Change theme"
+        aria-expanded="false"
+    >
+        <span class="theme-wheel"></span>
+    </button>
+
+
+
+    <!-- =====================================
+         THEME PANEL
+    ====================================== -->
+
+    <aside
+        id="theme-panel"
+        class="theme-panel hidden"
+        aria-label="Theme settings"
+    >
+
+        <div class="theme-panel-header">
+
+            <strong>
+                Theme
+            </strong>
+
+            <button
+                id="theme-close"
+                type="button"
+                aria-label="Close theme settings"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="color-setting">
+
+            <label for="background-color">
+                Background
+            </label>
+
+            <input
+                id="background-color"
+                type="color"
+                value="#ffffff"
+                aria-label="Background color"
+            >
+
+        </div>
+
+
+        <div class="color-setting">
+
+            <label for="text-color">
+                Text
+            </label>
+
+            <input
+                id="text-color"
+                type="color"
+                value="#111111"
+                aria-label="Text color"
+            >
+
+        </div>
+
+
+        <div class="preset-label">
+            Presets
+        </div>
+
+
+        <div class="theme-presets">
+
+            <button
+                class="theme-preset preset-default"
+                type="button"
+                data-background="#ffffff"
+                data-text="#111111"
+                aria-label="White theme"
+                title="White"
+            ></button>
+
+            <button
+                class="theme-preset preset-dark"
+                type="button"
+                data-background="#111111"
+                data-text="#ffffff"
+                aria-label="Dark theme"
+                title="Dark"
+            ></button>
+
+            <button
+                class="theme-preset preset-blue"
+                type="button"
+                data-background="#edf4ff"
+                data-text="#14213d"
+                aria-label="Blue theme"
+                title="Blue"
+            ></button>
+
+            <button
+                class="theme-preset preset-purple"
+                type="button"
+                data-background="#f5efff"
+                data-text="#38205f"
+                aria-label="Purple theme"
+                title="Purple"
+            ></button>
+
+            <button
+                class="theme-preset preset-green"
+                type="button"
+                data-background="#f1f8ed"
+                data-text="#23351e"
+                aria-label="Green theme"
+                title="Green"
+            ></button>
+
+            <button
+                class="theme-preset preset-pink"
+                type="button"
+                data-background="#fff1f5"
+                data-text="#4a1f2b"
+                aria-label="Pink theme"
+                title="Pink"
+            ></button>
+
+        </div>
+
+
+        <button
+            id="reset-theme"
+            type="button"
+        >
+            Reset to default
+        </button>
+
+    </aside>
+
+
+
+    <!-- =====================================
+         SCHEDULE DATA
     ====================================== -->
 
     <script src="schedules/wilcox.js"></script>
-
     <script src="schedules/santa-clara.js"></script>
-
     <script src="schedules/cupertino.js"></script>
 
 
     <!-- =====================================
-         PEARBELL APP
+         PEARBELL
     ====================================== -->
 
     <script src="script.js"></script>
-
 
 </body>
 
