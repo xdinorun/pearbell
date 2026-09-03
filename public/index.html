@@ -14,7 +14,10 @@
         content="PearBell — a simple, fast school bell schedule countdown."
     >
 
-    <meta name="theme-color" content="#ffffff">
+    <meta
+        name="theme-color"
+        content="#ffffff"
+    >
 
     <title>PearBell</title>
 
@@ -37,8 +40,6 @@
     >
 
         <section class="school-picker">
-
-            <!-- Animated logo -->
 
             <div class="intro-logo">
 
@@ -72,6 +73,7 @@
                         id="school-select"
                         aria-label="Choose your school"
                     >
+
                         <option
                             value=""
                             selected
@@ -91,9 +93,19 @@
                         <option value="cupertino">
                             Cupertino High School
                         </option>
+
                     </select>
 
                 </div>
+
+
+                <button
+                    id="school-confirm"
+                    type="button"
+                    disabled
+                >
+                    Continue
+                </button>
 
 
                 <p class="help">
@@ -115,7 +127,7 @@
 
 
     <!-- =====================================
-         COUNTDOWN
+         COUNTDOWN SCREEN
     ====================================== -->
 
     <main
@@ -126,8 +138,15 @@
         <header class="countdown-header">
 
             <div class="mini-brand">
-                <span aria-hidden="true">🍐</span>
-                <span>PearBell</span>
+
+                <span aria-hidden="true">
+                    🍐
+                </span>
+
+                <span>
+                    PearBell
+                </span>
+
             </div>
 
         </header>
@@ -169,6 +188,7 @@
                 <div class="next-divider"></div>
 
                 <div>
+
                     <span class="next-prefix">
                         Next:
                     </span>
@@ -176,6 +196,7 @@
                     <span id="next-period">
                         —
                     </span>
+
                 </div>
 
                 <div id="next-period-times">
@@ -189,11 +210,13 @@
                 id="change-school"
                 type="button"
             >
+
                 <span aria-hidden="true">
                     ⇄
                 </span>
 
                 Change School
+
             </button>
 
 
@@ -217,7 +240,9 @@
         aria-label="Change theme"
         aria-expanded="false"
     >
+
         <span class="theme-wheel"></span>
+
     </button>
 
 
@@ -357,16 +382,19 @@
 
 
     <!-- =====================================
-         SCHEDULE DATA
+         SCHOOL SCHEDULE DATA
     ====================================== -->
 
     <script src="schedules/wilcox.js"></script>
+
     <script src="schedules/santa-clara.js"></script>
+
     <script src="schedules/cupertino.js"></script>
 
 
+
     <!-- =====================================
-         PEARBELL
+         PEARBELL APP
     ====================================== -->
 
     <script src="script.js"></script>
