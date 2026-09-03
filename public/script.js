@@ -1,14 +1,29 @@
-const schoolScreen = document.getElementById("school-screen");
-const countdownScreen = document.getElementById("countdown-screen");
+const schoolScreen =
+    document.getElementById("school-screen");
 
-const schoolButtons = document.querySelectorAll(".school-button");
-const changeSchoolButton = document.getElementById("change-school");
+const countdownScreen =
+    document.getElementById("countdown-screen");
 
-const countdownEl = document.getElementById("countdown");
-const countdownLabelEl = document.getElementById("countdown-label");
-const currentPeriodEl = document.getElementById("current-period");
-const periodTimesEl = document.getElementById("period-times");
-const schoolNameEl = document.getElementById("school-name");
+const schoolButtons =
+    document.querySelectorAll(".school-button");
+
+const changeSchoolButton =
+    document.getElementById("change-school");
+
+const countdownEl =
+    document.getElementById("countdown");
+
+const countdownLabelEl =
+    document.getElementById("countdown-label");
+
+const currentPeriodEl =
+    document.getElementById("current-period");
+
+const periodTimesEl =
+    document.getElementById("period-times");
+
+const schoolNameEl =
+    document.getElementById("school-name");
 
 
 /* =========================================
@@ -16,7 +31,8 @@ const schoolNameEl = document.getElementById("school-name");
 ========================================= */
 
 const schools = {
-    wilcox: window.PearBellSchedules.wilcox,
+    wilcox:
+        window.PearBellSchedules.wilcox,
 
     "santa-clara":
         window.PearBellSchedules.santaClara,
@@ -35,14 +51,17 @@ let selectedSchool =
 
 
 /* =========================================
-   TIME HELPERS
+   DATE / TIME HELPERS
 ========================================= */
 
 function timeToDate(timeString) {
     const [hours, minutes] =
-        timeString.split(":").map(Number);
+        timeString
+            .split(":")
+            .map(Number);
 
-    const date = new Date();
+    const date =
+        new Date();
 
     date.setHours(
         hours,
@@ -57,9 +76,12 @@ function timeToDate(timeString) {
 
 function formatTime(timeString) {
     const [hours, minutes] =
-        timeString.split(":").map(Number);
+        timeString
+            .split(":")
+            .map(Number);
 
-    const date = new Date();
+    const date =
+        new Date();
 
     date.setHours(
         hours,
@@ -79,7 +101,8 @@ function formatTime(timeString) {
 
 
 function getLocalDateString() {
-    const now = new Date();
+    const now =
+        new Date();
 
     const year =
         now.getFullYear();
@@ -99,7 +122,36 @@ function getLocalDateString() {
 
 
 /* =========================================
-   SCHEDULE SELECTION
+   SCHOOL YEAR
+========================================= */
+
+function isOutsideSchoolYear(school) {
+    if (
+        !school.schoolYear ||
+        typeof school.schoolYear !== "object"
+    ) {
+        return false;
+    }
+
+    if (
+        !school.schoolYear.start ||
+        !school.schoolYear.end
+    ) {
+        return false;
+    }
+
+    const today =
+        getLocalDateString();
+
+    return (
+        today < school.schoolYear.start ||
+        today > school.schoolYear.end
+    );
+}
+
+
+/* =========================================
+   EXCEPTIONS
 ========================================= */
 
 function getTodayException(school) {
@@ -107,11 +159,15 @@ function getTodayException(school) {
         getLocalDateString();
 
     return (
-        school.exceptions?.[today]
-        || null
+        school.exceptions?.[today] ||
+        null
     );
 }
 
+
+/* =========================================
+   GET TODAY'S SCHEDULE
+========================================= */
 
 function getScheduleForToday(school) {
     const day =
@@ -122,35 +178,75 @@ function getScheduleForToday(school) {
 
 
     /* -------------------------------------
-       Special date
+       Outside school year
+    ------------------------------------- */
+
+    if (
+        isOutsideSchoolYear(school)
+    ) {
+        return [];
+    }
+
+
+    /* -------------------------------------
+       Special-date exceptions
     ------------------------------------- */
 
     if (exception) {
 
         if (
-            exception.type ===
-            "noSchool"
+            exception.type === "noSchool"
         ) {
             return [];
         }
 
+
         if (
-            exception.schedule
+            exception.type ===
+            "scheduleUnavailable"
+        ) {
+            return [];
+        }
+
+
+        if (
+            exception.schedule &&
+            Array.isArray(
+                exception.schedule
+            )
         ) {
             return exception.schedule;
         }
 
+
         if (
-            exception.scheduleName &&
-            school.specialSchedules?.[
-                exception.scheduleName
-            ]
+            exception.scheduleName
         ) {
-            return (
-                school.specialSchedules[
+
+            if (
+                school.specialSchedules?.[
                     exception.scheduleName
                 ]
-            );
+            ) {
+                return (
+                    school.specialSchedules[
+                        exception.scheduleName
+                    ]
+                );
+            }
+
+
+            if (
+                school.schedules?.[
+                    exception.scheduleName
+                ]
+            ) {
+                return (
+                    school.schedules[
+                        exception.scheduleName
+                    ]
+                );
+            }
         }
     }
 
@@ -175,7 +271,9 @@ function getScheduleForToday(school) {
         day === 1 &&
         school.schedules.monday
     ) {
-        return school.schedules.monday;
+        return (
+            school.schedules.monday
+        );
     }
 
 
@@ -246,10 +344,14 @@ function findCurrentBlock(schedule) {
         const block of schedule
     ) {
         const start =
-            timeToDate(block.start);
+            timeToDate(
+                block.start
+            );
 
         const end =
-            timeToDate(block.end);
+            timeToDate(
+                block.end
+            );
 
         if (
             now >= start &&
@@ -271,7 +373,9 @@ function findNextBlock(schedule) {
         const block of schedule
     ) {
         const start =
-            timeToDate(block.start);
+            timeToDate(
+                block.start
+            );
 
         if (
             start > now
@@ -371,7 +475,82 @@ function updateCountdown() {
 
 
     /* -------------------------------------
-       No schedule today
+       Outside school year
+    ------------------------------------- */
+
+    if (
+        isOutsideSchoolYear(school)
+    ) {
+        countdownEl.textContent =
+            "—";
+
+        countdownLabelEl.textContent =
+            "School is not in session";
+
+        currentPeriodEl.textContent =
+            "Summer Break";
+
+        periodTimesEl.textContent =
+            "";
+
+        return;
+    }
+
+
+    /* -------------------------------------
+       Special schedule exists, but
+       exact times are intentionally
+       unavailable
+    ------------------------------------- */
+
+    if (
+        exception?.type ===
+        "scheduleUnavailable"
+    ) {
+        countdownEl.textContent =
+            "—";
+
+        countdownLabelEl.textContent =
+            exception.label ||
+            "Special schedule today";
+
+        currentPeriodEl.textContent =
+            "Special Schedule";
+
+        periodTimesEl.textContent =
+            "";
+
+        return;
+    }
+
+
+    /* -------------------------------------
+       No school
+    ------------------------------------- */
+
+    if (
+        exception?.type ===
+        "noSchool"
+    ) {
+        countdownEl.textContent =
+            "—";
+
+        countdownLabelEl.textContent =
+            exception.label ||
+            "No school today";
+
+        currentPeriodEl.textContent =
+            "No School";
+
+        periodTimesEl.textContent =
+            "";
+
+        return;
+    }
+
+
+    /* -------------------------------------
+       Weekend / no schedule
     ------------------------------------- */
 
     if (
@@ -380,43 +559,27 @@ function updateCountdown() {
         countdownEl.textContent =
             "—";
 
+        const day =
+            new Date().getDay();
+
 
         if (
-            exception?.type ===
-            "noSchool"
+            day === 0 ||
+            day === 6
         ) {
             countdownLabelEl.textContent =
-                exception.label ||
                 "No school today";
 
             currentPeriodEl.textContent =
-                "No School";
+                "Weekend";
         }
 
         else {
+            countdownLabelEl.textContent =
+                "No schedule available today";
 
-            const day =
-                new Date()
-                    .getDay();
-
-            if (
-                day === 0 ||
-                day === 6
-            ) {
-                countdownLabelEl.textContent =
-                    "No school today";
-
-                currentPeriodEl.textContent =
-                    "Weekend";
-            }
-
-            else {
-                countdownLabelEl.textContent =
-                    "No schedule today";
-
-                currentPeriodEl.textContent =
-                    "No School";
-            }
+            currentPeriodEl.textContent =
+                "No Schedule";
         }
 
 
