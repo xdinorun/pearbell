@@ -5,10 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>PearBell</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>🍐 PearBell</h1>
-    <p>The site is working!</p>
+
+    <!-- School selection screen -->
+    <main id="school-screen" class="screen">
+        <div class="school-picker">
+            <div class="brand">
+                <span class="pear">🍐</span>
+                <h1>PearBell</h1>
+            </div>
+
+            <p class="subtitle">Choose your school</p>
+
+            <div class="school-list">
+                <button class="school-button" data-school="wilcox">
+                    Adrian Wilcox High School
+                </button>
+
+                <button class="school-button" data-school="santa-clara">
+                    Santa Clara High School
+                </button>
+
+                <button class="school-button" data-school="cupertino">
+                    Cupertino High School
+                </button>
+            </div>
+
+            <p class="help">
+                Don't see your school?
+                <a href="mailto:help@pearbell.org">help@pearbell.org</a>
+            </p>
+        </div>
+    </main>
+
+
+    <!-- Main countdown screen -->
+    <main id="countdown-screen" class="screen hidden">
+
+        <header class="top-bar">
+
+            <div class="period-info">
+                <span id="current-period">4th Period</span>
+                <span id="period-times">10:42 AM → 11:29 AM</span>
+            </div>
+
+            <button id="change-school">
+                Rechoose School
+            </button>
+
+        </header>
+
+
+        <section class="countdown-container">
+
+            <div id="countdown">
+                12:43
+            </div>
+
+            <div id="countdown-label">
+                until 4th Period ends
+            </div>
+
+            <div id="school-name">
+                Adrian Wilcox High School
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
 </body>
 </html>
