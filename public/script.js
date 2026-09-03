@@ -14,31 +14,59 @@ const schools = {
     wilcox: {
         name: "Adrian Wilcox High School",
 
-        // Temporary test schedule.
-        // We'll replace this with the exact Wilcox schedule next.
         schedules: {
-            default: [
-                { name: "1st Period", start: "08:30", end: "09:20" },
-                { name: "Passing Period", start: "09:20", end: "09:27" },
+            monday: [
+                { name: "1st Period", start: "08:45", end: "09:35" },
+                { name: "Passing Period", start: "09:35", end: "09:40" },
 
-                { name: "2nd Period", start: "09:27", end: "10:17" },
-                { name: "Passing Period", start: "10:17", end: "10:24" },
+                { name: "2nd Period", start: "09:40", end: "10:30" },
+                { name: "Passing Period", start: "10:30", end: "10:40" },
 
-                { name: "SSR / Tutorial", start: "10:24", end: "10:54" },
-                { name: "Passing Period", start: "10:54", end: "11:01" },
+                { name: "3rd Period", start: "10:40", end: "11:30" },
+                { name: "Passing Period", start: "11:30", end: "11:35" },
 
-                { name: "3rd Period", start: "11:01", end: "11:51" },
+                { name: "4th Period + Announcements", start: "11:35", end: "12:30" },
 
-                { name: "Lunch", start: "11:51", end: "12:31" },
-                { name: "Passing Period", start: "12:31", end: "12:38" },
+                { name: "Lunch", start: "12:30", end: "13:05" },
+                { name: "Passing Period", start: "13:05", end: "13:10" },
 
-                { name: "4th Period", start: "12:38", end: "13:28" },
-                { name: "Passing Period", start: "13:28", end: "13:35" },
+                { name: "5th Period", start: "13:10", end: "14:00" },
+                { name: "Passing Period", start: "14:00", end: "14:05" },
 
-                { name: "5th Period", start: "13:35", end: "14:25" },
-                { name: "Passing Period", start: "14:25", end: "14:32" },
+                { name: "6th Period", start: "14:05", end: "14:55" },
+                { name: "Passing Period", start: "14:55", end: "15:00" },
 
-                { name: "6th Period", start: "14:32", end: "15:22" }
+                { name: "7th Period", start: "15:00", end: "15:50" }
+            ],
+
+            tuesdayThursday: [
+                { name: "1st Period", start: "08:45", end: "10:15" },
+                { name: "Passing Period", start: "10:15", end: "10:25" },
+
+                { name: "3rd Period + Announcements", start: "10:25", end: "12:00" },
+
+                { name: "Lunch", start: "12:00", end: "12:35" },
+                { name: "Passing Period", start: "12:35", end: "12:40" },
+
+                { name: "5th Period", start: "12:40", end: "14:10" },
+                { name: "Passing Period", start: "14:10", end: "14:15" },
+
+                { name: "7th Period", start: "14:15", end: "15:45" }
+            ],
+
+            wednesdayFriday: [
+                { name: "2nd Period", start: "08:45", end: "10:15" },
+                { name: "Passing Period", start: "10:15", end: "10:25" },
+
+                { name: "SSR + Announcements", start: "10:25", end: "11:20" },
+
+                { name: "Lunch", start: "11:20", end: "11:50" },
+                { name: "Passing Period", start: "11:50", end: "12:00" },
+
+                { name: "4th Period", start: "12:00", end: "13:30" },
+                { name: "Passing Period", start: "13:30", end: "13:35" },
+
+                { name: "6th Period", start: "13:35", end: "15:05" }
             ]
         }
     },
@@ -50,14 +78,20 @@ const schools = {
             default: [
                 { name: "1st Period", start: "08:30", end: "09:20" },
                 { name: "Passing Period", start: "09:20", end: "09:27" },
+
                 { name: "2nd Period", start: "09:27", end: "10:17" },
                 { name: "Passing Period", start: "10:17", end: "10:24" },
+
                 { name: "3rd Period", start: "10:24", end: "11:14" },
+
                 { name: "Lunch", start: "11:14", end: "11:54" },
+
                 { name: "4th Period", start: "11:54", end: "12:44" },
                 { name: "Passing Period", start: "12:44", end: "12:51" },
+
                 { name: "5th Period", start: "12:51", end: "13:41" },
                 { name: "Passing Period", start: "13:41", end: "13:48" },
+
                 { name: "6th Period", start: "13:48", end: "14:38" }
             ]
         }
@@ -159,6 +193,27 @@ function formatTime(timeString) {
 function getScheduleForToday(school) {
     const day = new Date().getDay();
 
+    // Sunday or Saturday
+    if (day === 0 || day === 6) {
+        return [];
+    }
+
+    // Wilcox
+    if (school === schools.wilcox) {
+        if (day === 1) {
+            return school.schedules.monday;
+        }
+
+        if (day === 2 || day === 4) {
+            return school.schedules.tuesdayThursday;
+        }
+
+        if (day === 3 || day === 5) {
+            return school.schedules.wednesdayFriday;
+        }
+    }
+
+    // Cupertino
     if (school === schools.cupertino) {
         if (day === 1) {
             return school.schedules.monday;
@@ -171,15 +226,14 @@ function getScheduleForToday(school) {
         if (day === 3 || day === 5) {
             return school.schedules.wednesdayFriday;
         }
-
-        return [];
     }
 
-    if (day === 0 || day === 6) {
-        return [];
+    // Schools that currently use one default weekday schedule
+    if (school.schedules.default) {
+        return school.schedules.default;
     }
 
-    return school.schedules.default;
+    return [];
 }
 
 function findCurrentBlock(schedule) {
