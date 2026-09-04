@@ -21,6 +21,10 @@ body {
     background: var(--background);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family:
         Inter,
@@ -101,13 +105,6 @@ button {
     margin-bottom: 38px;
 }
 
-
-/*
-    Initial states.
-
-    JavaScript adds the .play-intro class
-    whenever the school picker is shown.
-*/
 
 .rolling-pear {
     position: absolute;
@@ -497,7 +494,7 @@ button {
 #countdown-screen {
     position: relative;
 
-    overflow: hidden;
+    overflow: visible;
 }
 
 
@@ -785,6 +782,264 @@ button {
 
 
 /* =========================================
+   TODAY'S SCHEDULE
+========================================= */
+
+.daily-schedule-section {
+    width: 100%;
+
+    padding:
+        80px
+        24px
+        120px;
+
+    background: var(--background);
+}
+
+
+.daily-schedule-inner {
+    width:
+        min(
+            720px,
+            100%
+        );
+
+    margin: 0 auto;
+}
+
+
+.daily-schedule-heading {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+}
+
+
+.schedule-eyebrow {
+    margin-bottom: 7px;
+
+    font-size: 0.7rem;
+    font-weight: 750;
+
+    letter-spacing: 0.14em;
+
+    color:
+        color-mix(
+            in srgb,
+            var(--text) 42%,
+            var(--background)
+        );
+}
+
+
+.daily-schedule-heading h2 {
+    margin: 0;
+
+    font-size:
+        clamp(
+            1.8rem,
+            5vw,
+            2.5rem
+        );
+
+    letter-spacing: -0.04em;
+
+    font-weight: 740;
+}
+
+
+#schedule-date {
+    padding-bottom: 5px;
+
+    white-space: nowrap;
+
+    font-size: 0.83rem;
+
+    color:
+        color-mix(
+            in srgb,
+            var(--text) 48%,
+            var(--background)
+        );
+}
+
+
+/* =========================================
+   SCHEDULE ROWS
+========================================= */
+
+#daily-schedule-list {
+    border-top:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--text) 12%,
+            transparent
+        );
+}
+
+
+.schedule-row {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1fr
+        )
+        auto;
+
+    align-items: center;
+
+    gap: 20px;
+
+    min-height: 78px;
+
+    padding:
+        17px
+        18px;
+
+    border-bottom:
+        1px solid
+        color-mix(
+            in srgb,
+            var(--text) 10%,
+            transparent
+        );
+
+    border-radius: 12px;
+
+    transition:
+        background-color 160ms ease,
+        opacity 160ms ease;
+}
+
+
+.schedule-row-name {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+
+    font-size: 1rem;
+    font-weight: 630;
+}
+
+
+.schedule-row-time {
+    white-space: nowrap;
+
+    text-align: right;
+
+    font-size: 0.88rem;
+
+    font-variant-numeric:
+        tabular-nums;
+
+    color:
+        color-mix(
+            in srgb,
+            var(--text) 56%,
+            var(--background)
+        );
+}
+
+
+/* =========================================
+   CURRENT SCHEDULE ROW
+========================================= */
+
+.schedule-row.current {
+    margin: 4px 0;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--text) 6%,
+            var(--background)
+        );
+
+    border-bottom-color:
+        transparent;
+}
+
+
+.schedule-row.current::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 18px;
+    bottom: 18px;
+
+    width: 3px;
+
+    border-radius: 999px;
+
+    background: var(--text);
+}
+
+
+.schedule-now {
+    flex: 0 0 auto;
+
+    padding:
+        4px
+        7px;
+
+    border-radius: 999px;
+
+    background: var(--text);
+    color: var(--background);
+
+    font-size: 0.58rem;
+    font-weight: 750;
+
+    letter-spacing: 0.08em;
+}
+
+
+/* =========================================
+   PAST BLOCKS
+========================================= */
+
+.schedule-row.past {
+    opacity: 0.45;
+}
+
+
+/* =========================================
+   EMPTY SCHEDULE
+========================================= */
+
+.schedule-empty {
+    padding: 42px 0;
+
+    text-align: center;
+
+    font-size: 0.9rem;
+
+    color:
+        color-mix(
+            in srgb,
+            var(--text) 46%,
+            var(--background)
+        );
+}
+
+
+/* =========================================
    THEME BUTTON
 ========================================= */
 
@@ -827,8 +1082,7 @@ button {
         );
 
     transition:
-        transform 150ms ease,
-        box-shadow 150ms ease;
+        transform 150ms ease;
 }
 
 
@@ -1184,6 +1438,43 @@ input[type="color"]::-moz-color-swatch {
 
     .next-block {
         margin-top: 25px;
+    }
+
+    .daily-schedule-section {
+        padding:
+            60px
+            20px
+            100px;
+    }
+
+    .daily-schedule-heading {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    #schedule-date {
+        padding-bottom: 0;
+    }
+
+    .schedule-row {
+        min-height: 70px;
+
+        padding:
+            15px
+            12px;
+
+        gap: 12px;
+    }
+
+    .schedule-row-name {
+        font-size: 0.92rem;
+    }
+
+    .schedule-row-time {
+        font-size: 0.78rem;
     }
 
     #theme-toggle {
